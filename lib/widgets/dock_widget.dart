@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mac_dock/widgets/animated_icon.dart';
+import 'package:reorderables/reorderables.dart';
 
 /// Dock of the reorderable [items].
 class Dock extends StatefulWidget {
@@ -43,7 +43,7 @@ class _DockState extends State<Dock> {
     return getPropertyValue(
       index: index,
       baseValue: baseTranslationY,
-      maxValue: -22,
+      maxValue: -40,
       nonHoveredMaxValue: -14,
     );
   }
@@ -101,8 +101,8 @@ class _DockState extends State<Dock> {
       //place the tile in the new position
       items.insert(newIndex, tile);
 
-      //Update the hovered Index
-      hoveredIndex = newIndex;
+      // //Update the hovered Index
+      // hoveredIndex = newIndex;
     });
   }
 
@@ -113,12 +113,14 @@ class _DockState extends State<Dock> {
     baseItemHeight = 40;
 
     verticlItemsPadding = 10;
-    baseTranslationY = 0.0;
+    baseTranslationY = 0;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
+      height: 100,
+      width: 400,
       duration: const Duration(
         milliseconds: 300,
       ),
@@ -128,44 +130,31 @@ class _DockState extends State<Dock> {
       ),
       padding: const EdgeInsets.all(4),
       child: SizedBox(
-        height: 60,
-        child: ReorderableListView.builder(
-          shrinkWrap: true,
-          buildDefaultDragHandles: false,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          dragStartBehavior: DragStartBehavior.start,
-          scrollDirection: Axis.horizontal,
-          onReorder: (oldIndex, newIndex) => updateMytiles(oldIndex, newIndex),
-          proxyDecorator: (child, index, animation) {
-            return CustomAnimatedIcon(
-              icon: items[index],
-              scaledSize: getScaledSize(index),
-              translationY: getTranslationY(index),
-            );
-          },
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return MouseRegion(
-                key: ValueKey(items[index]),
-                cursor: SystemMouseCursors.click,
-                onEnter: ((event) {
-                  setState(() {
-                    hoveredIndex = index;
-                  });
-                }),
-                onExit: (event) {
-                  setState(() {
-                    hoveredIndex = null;
-                  });
-                },
-                child: ReorderableDragStartListener(
-                  index: index,
-                  child: CustomAnimatedIcon(
-                      translationY: getTranslationY(index),
-                      scaledSize: getScaledSize(index),
-                      icon: items[index]),
-                ));
-          },
+        // height: 100,
+        // width: 400,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ReorderableWrap(
+              buildDraggableFeedback: (context, constraints, child) {
+                return Container(constraints: constraints, child: child);
+              },
+              padding: const EdgeInsets.all(8),
+              direction: Axis.horizontal,
+              runAlignment: WrapAlignment.center,
+              needsLongPressDraggable: true,
+              onReorder: (oldIndex, newIndex) {
+                updateMytiles(oldIndex, newIndex);
+              },
+              children: List.generate(
+                items.length,
+                (index) => CustomAnimatedIcon(
+                    translationY: getTranslationY(index),
+                    scaledSize: getScaledSize(index),
+                    icon: items[index]),
+              ),
+            ),
+          ],
         ),
       ),
     );
