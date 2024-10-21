@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// This is the animated draggable icon
 class CustomAnimatedIcon extends StatelessWidget {
+  /// This is the animated draggable icon
+
   const CustomAnimatedIcon(
       {super.key,
       required this.translationY,
