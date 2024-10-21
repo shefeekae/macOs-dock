@@ -139,6 +139,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  reorderables:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "77354a73056b48cbd4c9c3b956451a7822b75958"
+      url: "https://github.com/shefeekae/reorderables.git"
+    source: git
+    version: "0.6.0"
   sky_engine:
     dependency: transitive
     description: flutter
